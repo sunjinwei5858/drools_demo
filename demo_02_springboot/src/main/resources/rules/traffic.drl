@@ -1,14 +1,19 @@
-package plausibcheck.adress
+package rules
 
+import com.sunjinwei.springboot.model.Violation
 import com.sunjinwei.springboot.model.TrafficViolation
+import com.sunjinwei.springboot.model.Fine
+
 
 rule "rule_01"
     when
-        trafficViolation:TrafficViolation(getViolation(actualSpeed >= 100 & actualSpeed <= 200))
-        fine : TrafficViolation.Fine();
+        trafficViolation: TrafficViolation(violation != null && driver != null)
+        violation: Violation(type == "speed" && actualSpeed > 100 && actualSpeed < 200)
+        fine: Fine()
     then
-        trafficViolation.setSuspended("NO");
         fine.setPoints(3);
         fine.setAmount(500);
+        trafficViolation.setFine(fine);
+        trafficViolation.setSuspended("NO");
 		System.out.println("规则中打印日志：校验通过!");
 end

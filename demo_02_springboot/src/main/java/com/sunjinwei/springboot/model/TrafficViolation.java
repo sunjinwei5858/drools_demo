@@ -21,35 +21,5 @@ public class TrafficViolation {
     @JsonProperty("Should the driver be suspended?")
     private String suspended;
 
-    @Data
-    public static class Driver {
-
-        @JsonProperty("Points")
-        private int points;
-
-    }
-
-    @Data
-    public static class Violation {
-
-        @JsonProperty("Type")
-        private String type;
-
-        @JsonProperty("Actual Speed")
-        private int actualSpeed;
-
-        @JsonProperty("Speed Limit")
-        private int speedLimit;
-    }
-
-    @Data
-    public static class Fine {
-
-        @JsonProperty("Points")
-        private int points;
-
-        @JsonProperty("Amount")
-        private int amount;
-    }
 
 }

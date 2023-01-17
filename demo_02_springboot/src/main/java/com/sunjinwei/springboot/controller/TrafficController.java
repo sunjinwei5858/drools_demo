@@ -1,6 +1,8 @@
 package com.sunjinwei.springboot.controller;
 
+import com.sunjinwei.springboot.model.Fine;
 import com.sunjinwei.springboot.model.TrafficViolation;
+import com.sunjinwei.springboot.model.Violation;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +24,20 @@ public class TrafficController {
     public TrafficViolation trafficViolation(@RequestBody TrafficViolation trafficViolation) {
 
         KieSession kieSession = kieContainer.newKieSession();
+
+        Violation violation = trafficViolation.getViolation();
         kieSession.insert(trafficViolation);
+        kieSession.insert(violation);
+
+        Fine fine = new Fine();
+        kieSession.insert(fine);
+
+        int ruleFiredCount = kieSession.fireAllRules();
+
+        kieSession.destroy();
+
+        System.out.println("触发了" + ruleFiredCount + "条规则");
+
         return trafficViolation;
     }
 
