@@ -6,7 +6,6 @@ import org.kie.api.builder.*;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.internal.io.ResourceFactory;
-import org.kie.spring.KModuleBeanFactoryPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,19 +44,12 @@ public class DroolsAutoConfiguration {
     public KieContainer kieContainer() throws IOException {
         final KieRepository kieRepository = getKieServices().getRepository();
 
-        kieRepository.addKieModule(new KieModule() {
-            @Override
-            public ReleaseId getReleaseId() {
-                return kieRepository.getDefaultReleaseId();
-            }
-        });
+        kieRepository.addKieModule(kieRepository::getDefaultReleaseId);
 
         KieBuilder kieBuilder = getKieServices().newKieBuilder(kieFileSystem());
         kieBuilder.buildAll();
 
-        KieContainer kieContainer = getKieServices().newKieContainer(kieRepository.getDefaultReleaseId());
-
-        return kieContainer;
+        return getKieServices().newKieContainer(kieRepository.getDefaultReleaseId());
     }
 
     private KieServices getKieServices() {
@@ -74,11 +66,5 @@ public class DroolsAutoConfiguration {
     @ConditionalOnMissingBean(KieSession.class)
     public KieSession kieSession() throws IOException {
         return kieContainer().newKieSession();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(KModuleBeanFactoryPostProcessor.class)
-    public KModuleBeanFactoryPostProcessor kiePostProcessor() {
-        return new KModuleBeanFactoryPostProcessor();
     }
 }

@@ -17,7 +17,7 @@
         <dependency>
             <groupId>org.drools</groupId>
             <artifactId>drools-compiler</artifactId>
-            <version>7.32.0.Final</version>
+            <version>7.6.0.Final</version>
         </dependency>
 
         <dependency>
