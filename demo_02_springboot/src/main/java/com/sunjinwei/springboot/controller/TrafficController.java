@@ -36,8 +36,6 @@ public class TrafficController {
 
         kieSession.destroy();
 
-        System.out.println("触发了" + ruleFiredCount + "条规则");
-
         return trafficViolation;
     }
 
